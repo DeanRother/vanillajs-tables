@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+     <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <title>w3 #1</title>
+
+    <script type="text/javascript">
+      var myObject = {"meters": [
+      { METER_NUM: '1006-2001413',
+        PRODUCTION_DATE: "2018-03-12T14:46:45.000Z",
+        METER_NAME: 'Needmore #22H',
+        FLOW_TIME_MINUTES: 9,
+        ID: '1006-20014132018-03-12 14:46:45.000' },
+      { METER_NUM: '1006-2001405',
+        PRODUCTION_DATE: "2018-03-12T14:46:41.000Z",
+        METER_NAME: 'Atlantic Inland Group #05H',
+        FLOW_TIME_MINUTES: 342,
+        ID: '1006-20014052018-03-12 14:46:41.000' },
+      { METER_NUM: '1006-2001397',
+        PRODUCTION_DATE: "2018-03-12T14:46:41.000Z",
+        METER_NAME: 'Atlantic Inland Group #03H',
+        FLOW_TIME_MINUTES: 2345,
+        ID: '1006-20013972018-03-12 14:46:41.000' }
+      ]};
+    </script>
+  </head>
+  <body>
+    <h2>w3 #1</h2>
+
+    <div class="table">
+      <table id="tbl1" class="w3-table-all">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Meter Number</th>
+            <th>Meter Name</th>
+            <th>Production Date</th>
+            <th>Flow Time</th>
+            <th>ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr w3-repeat="meters">
+            <td>
+              <input type="checkbox" id="rowCheck" value="false" onchange="rowSelected(event)">
+              <!-- <input type="button" id="rowEdit" onclick="rowEdit(event)" value="Edit"> -->
+            </td>
+            <td>{{METER_NUM}}</td>
+            <td>{{METER_NAME}}</td>
+            <td>{{PRODUCTION_DATE}}</td>
+            <td>{{FLOW_TIME_MINUTES}}</td>
+            <td>{{ID}}</td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <script type="text/javascript">
+      console.log(myObject);
+
+      w3.displayObject("tbl1", myObject);
+
+      function rowSelected(event){
+        console.log(event);
+      }
+
+      function rowEdit(event){
+        console.log(event);
+      }
+
+      function addRowHandlers() {
+        var rows = document.getElementById("tbl1").rows;
+        console.log("adding row handlers...")
+        for (i = 0; i < rows.length; i++) {
+          console.log("Adding row handler to row " + i);
+          rows[i].onclick = function(){ return function(){
+                 var id = this.cells[1].innerHTML;
+          };}(rows[i]);
+          console.log(rows[i]);
+        }
+      }
+      addRowHandlers();
+      // window.onload = addRowHandlers();
+    </script>
+
+  </body>
+</html>
