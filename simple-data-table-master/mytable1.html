@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Chivo|Overpass" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="src/skins/default.css"/>
+    <!-- <script src="../test/fixtures/2-rows.js"></script> -->
+    <script src="src/index.js"></script>
+
+    <!-- <link rel="stylesheet" href="vendors/highlight/styles/github.css"/> -->
+    <!-- <script src="vendors/highlight/highlight.pack.js"></script> -->
+    <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+
+    <script type="text/javascript">
+      var myData = [
+      { METER_NUM: '1006-2001413',
+        PRODUCTION_DATE: "2018-03-12T14:46:45.000Z",
+        METER_NAME: 'Needmore #22H',
+        FLOW_TIME_MINUTES: 9,
+        ID: '1006-20014132018-03-12 14:46:45.000' },
+      { METER_NUM: '1006-2001405',
+        PRODUCTION_DATE: "2018-03-12T14:46:41.000Z",
+        METER_NAME: 'Atlantic Inland Group #05H',
+        FLOW_TIME_MINUTES: 342,
+        ID: '1006-20014052018-03-12 14:46:41.000' },
+      { METER_NUM: '1006-2001397',
+        PRODUCTION_DATE: "2018-03-12T14:46:41.000Z",
+        METER_NAME: 'Atlantic Inland Group #03H',
+        FLOW_TIME_MINUTES: 2345,
+        ID: '1006-20013972018-03-12 14:46:41.000' }
+      ];
+    </script>
+
+    <title></title>
+  </head>
+  <body>
+    <div id="meterTable"></div>
+
+    <script type="text/javascript">
+      (function(){
+        const d = new SimpleDataTable(document.querySelector("#meterTable"));
+        d.load(myData);
+        d.render();
+      })();
+    </script>
+  </body>
+</html>

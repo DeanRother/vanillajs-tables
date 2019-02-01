@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
      <script src="https://www.w3schools.com/lib/w3.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>w3 #1</title>
 
     <script type="text/javascript">
@@ -72,18 +73,35 @@
         console.log(event);
       }
 
-      function addRowHandlers() {
-        var rows = document.getElementById("tbl1").rows;
-        console.log("adding row handlers...")
-        for (i = 0; i < rows.length; i++) {
-          console.log("Adding row handler to row " + i);
-          rows[i].onclick = function(){ return function(){
-                 var id = this.cells[1].innerHTML;
-          };}(rows[i]);
-          console.log(rows[i]);
-        }
-      }
-      addRowHandlers();
+      $(document).ready(function(){
+        $("tr").each(function(index, element){
+          console.log(index, element);
+          var currentRow = $(this);
+          element.onclick = function(eventObject){
+            // $(eventObject.target).each(console.log(eventObject.data));
+            console.log(eventObject.originalTarget.innerText);
+          }
+        });
+      });
+
+      // $(document).ready(function(){
+      //   $("td").click(function(eventObject){
+      //     console.log("Table row clicked: ", eventObject, );
+      //   });
+      // })
+
+      // function addRowHandlers() {
+      //   var rows = document.getElementById("tbl1").rows;
+      //   console.log("adding row handlers...")
+      //   for (i = 0; i < rows.length; i++) {
+      //     console.log("Adding row handler to row " + i);
+      //     rows[i].onclick = function(){ return function(){
+      //            var id = this.cells[1].innerHTML;
+      //     };}(rows[i]);
+      //     console.log(rows[i]);
+      //   }
+      // }
+      // addRowHandlers();
       // window.onload = addRowHandlers();
     </script>
 
