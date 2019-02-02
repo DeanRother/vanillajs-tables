@@ -43,7 +43,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr w3-repeat="meters">
+          <tr w3-repeat="meters" id="{{ID}}">
             <td>
               <input type="checkbox" id="rowCheck" value="false" onchange="rowSelected(event)">
               <!-- <input type="button" id="rowEdit" onclick="rowEdit(event)" value="Edit"> -->
@@ -79,6 +79,8 @@
           var currentRow = $(this);
           element.onclick = function(eventObject){
             // $(eventObject.target).each(console.log(eventObject.data));
+            console.log(eventObject.originalTarget);
+            console.log(eventObject.originalTarget.parentNode.id);
             console.log(eventObject.originalTarget.innerText);
           }
         });
