@@ -8,7 +8,7 @@
     <title>w3 #1</title>
 
     <script type="text/javascript">
-      var myObject = {"meters": [
+      var dataObject = {"meters": [
       { METER_NUM: '1006-2001413',
         PRODUCTION_DATE: "2018-03-12T14:46:45.000Z",
         METER_NAME: 'Needmore #22H',
@@ -45,8 +45,8 @@
         <tbody>
           <tr w3-repeat="meters" id="{{ID}}">
             <td>
-              <input type="checkbox" id="rowCheck" value="false" onchange="rowSelected(event)">
-              <!-- <input type="button" id="rowEdit" onclick="rowEdit(event)" value="Edit"> -->
+              <!-- <input type="checkbox" id="rowCheck" value="false" onchange="rowSelected(event)"> -->
+              <input type="button" id="{{ID}}" onclick="rowEdit(event)" value="Edit">
             </td>
             <td>{{METER_NUM}}</td>
             <td>{{METER_NAME}}</td>
@@ -55,36 +55,101 @@
             <td>{{ID}}</td>
           </tr>
         </tbody>
-
       </table>
+      <div id="editTable">
+
+      </div>
     </div>
 
 
     <script type="text/javascript">
-      console.log(myObject);
+      // console.log(dataObject);
 
-      w3.displayObject("tbl1", myObject);
+      w3.displayObject("tbl1", dataObject);
 
       function rowSelected(event){
         console.log(event);
       }
 
-      function rowEdit(event){
-        console.log(event);
+      function rowEdit(eventObject){
+        // let data = JSON.parse(dataObject);
+        console.log(eventObject);
+        console.log(eventObject.target.getAttribute("ID"));
+        // console.log(data.meters[0]);
+        var id = eventObject.target.getAttribute("ID");
+        var item = findId(dataObject, id);
+        console.log(item);
+        CreateForm(eventObject.target, item);
+
+
       }
 
-      $(document).ready(function(){
-        $("tr").each(function(index, element){
-          console.log(index, element);
-          var currentRow = $(this);
-          element.onclick = function(eventObject){
-            // $(eventObject.target).each(console.log(eventObject.data));
-            console.log(eventObject.originalTarget);
-            console.log(eventObject.originalTarget.parentNode.id);
-            console.log(eventObject.originalTarget.innerText);
+      function findId(data, idToLookFor) {
+        var dataArray = data.meters;
+        for (var i = 0; i < dataArray.length; i++) {
+          if (dataArray[i].ID == idToLookFor) {
+              return(dataArray[i]);
           }
-        });
-      });
+        }
+      }
+
+      function CreateForm(parentElement, rowObject){
+        var f = document.createElement("form");
+        f.setAttribute('method',"post");
+        f.setAttribute('action',"");
+
+        var i = document.createElement("input"); //input element, text
+        i.setAttribute('type',"text");
+        i.setAttribute('name',"METER_NUM");
+        i.setAttribute('value',rowObject.METER_NUM);
+        f.appendChild(i);
+
+        var j = document.createElement("input"); //input element, text
+        j.setAttribute('type',"text");
+        j.setAttribute('name',"METER_NUM");
+        j.setAttribute('value',rowObject.METER_NAME);
+        f.appendChild(j);
+
+        var k = document.createElement("input"); //input element, text
+        k.setAttribute('type',"text");
+        k.setAttribute('name',"METER_NUM");
+        k.setAttribute('value',rowObject.PRODUCTION_DATE);
+        f.appendChild(k);
+
+        var l = document.createElement("input"); //input element, text
+        l.setAttribute('type',"text");
+        l.setAttribute('name',"METER_NUM");
+        l.setAttribute('value',rowObject.FLOW_TIME_MINUTES);
+        f.appendChild(l);
+
+        var s = document.createElement("input"); //input element, Submit button
+        s.setAttribute('type',"submit");
+        s.setAttribute('value',"Submit");
+
+
+        f.appendChild(s);
+
+        //and some more input elements here
+        //and dont forget to add a submit button
+        console.log(parentElement.parentElement.parentElement);
+
+        // document.getElementsByTagName('body')[0].appendChild(f);
+        document.getElementById('editTable').appendChild(f);
+        // parentElement.parentNode.appendChild(f);
+      }
+
+      // $(document).ready(function(){
+      //   $("tr").each(function(index, element){
+      //     console.log(index, element);
+      //     var currentRow = $(this);
+      //     element.onclick = function(eventObject){
+      //       // $(eventObject.target).each(console.log(eventObject.data));
+      //       console.log(eventObject.originalTarget);
+      //       console.log(eventObject.originalTarget.parentNode.id);
+      //       console.log(eventObject.originalTarget.innerText);
+      //     }
+      //   });
+      // });
 
       // $(document).ready(function(){
       //   $("td").click(function(eventObject){
