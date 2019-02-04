@@ -3,6 +3,49 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style media="screen">
+    * {
+      box-sizing: border-box;
+      }
+
+      /* .row::after {
+      content: "";
+      clear: both;
+      display: table;
+      }
+
+      [class*="col-"] {
+      float: left;
+      padding: 15px;
+      }
+
+      .col-1 {width: 8.33%;}
+      .col-2 {width: 16.66%;}
+      .col-3 {width: 25%;}
+      .col-4 {width: 33.33%;}
+      .col-5 {width: 41.66%;}
+      .col-6 {width: 50%;}
+      .col-7 {width: 58.33%;}
+      .col-8 {width: 66.66%;}
+      .col-9 {width: 75%;}
+      .col-10 {width: 83.33%;}
+      .col-11 {width: 91.66%;}
+      .col-12 {width: 100%;} */
+
+      .table {
+        width: 75%;
+        float: left;
+      }
+      .edit {
+        width: 25%;
+        float: left;
+        padding: 15px;
+      }
+      .editRow {
+        background-color: lightgrey;
+        font-style: bold;
+      }
+    </style>
      <script src="https://www.w3schools.com/lib/w3.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>w3 #1</title>
@@ -13,21 +56,24 @@
         PRODUCTION_DATE: "2018-03-12T14:46:45.000Z",
         METER_NAME: 'Needmore #22H',
         FLOW_TIME_MINUTES: 9,
+        GAS_FLOW_RATE: 8960,
         ID: '1006-20014132018-03-12 14:46:45.000' },
       { METER_NUM: '1006-2001405',
         PRODUCTION_DATE: "2018-03-12T14:46:41.000Z",
         METER_NAME: 'Atlantic Inland Group #05H',
-        FLOW_TIME_MINUTES: 342,
+        FLOW_TIME_MINUTES: null,
+        GAS_FLOW_RATE: 9960,
         ID: '1006-20014052018-03-12 14:46:41.000' },
       { METER_NUM: '1006-2001397',
         PRODUCTION_DATE: "2018-03-12T14:46:41.000Z",
         METER_NAME: 'Atlantic Inland Group #03H',
         FLOW_TIME_MINUTES: 2345,
+        GAS_FLOW_RATE: 10060,
         ID: '1006-20013972018-03-12 14:46:41.000' }
       ]};
     </script>
   </head>
-  <body>
+  <body onload="loadDoc()">
     <h2>w3 #1</h2>
 
     <div class="table">
@@ -56,16 +102,28 @@
           </tr>
         </tbody>
       </table>
-      <div id="editTable">
-
-      </div>
     </div>
 
+    <div id="editTable" class="edit"></div>
 
     <script type="text/javascript">
-      // console.log(dataObject);
+      // console.log(JSON.stringify(dataObject));
 
-      w3.displayObject("tbl1", dataObject);
+      // w3.displayObject("tbl1", loadDoc);
+
+      // function loadDoc(){
+      //   w3.displayObject("tbl1",dataObject);
+      // }
+
+      function loadDoc(){
+        w3.getHttpObject("http://localhost:3001/w3sql", function(o){
+          var meters = {
+            "meters": o
+          };
+          console.log(meters);
+          w3.displayObject("tbl1",meters);
+        });
+      };
 
       function rowSelected(event){
         console.log(event);
@@ -79,9 +137,11 @@
         var id = eventObject.target.getAttribute("ID");
         var item = findId(dataObject, id);
         console.log(item);
+
+        // This should work.  But, maybe covered by w3 css?
+        eventObject.target.parentNode.parentNode.className = "editRow";
+
         CreateForm(eventObject.target, item);
-
-
       }
 
       function findId(data, idToLookFor) {
@@ -93,41 +153,84 @@
         }
       }
 
+      // const handleFormSubmit = event => {
+      //   // Stop the form from submitting
+      //   event.preventDefault();
+      //   //TODO: Call our function to get the form dataArray
+      //   const data={};
+      //   //DEV: log data
+      //   console.log(data);
+      //   //Use JSON.stringify() to make the output valid, human-readable json
+      //
+      // }
+
       function CreateForm(parentElement, rowObject){
+
+        var existingForm = document.getElementsByTagName('form')[0]
+        // console.log("Existing Form: " + existingForm);
+        if (existingForm){
+          existingForm.parentNode.removeChild(existingForm);
+        }
+
+        console.log("Create Form rowObject:" + rowObject);
         var f = document.createElement("form");
-        f.setAttribute('method',"post");
-        f.setAttribute('action',"");
+        f.setAttribute("id",rowObject.ID);
+        // f.setAttribute('method',"post");
+        // f.setAttribute('action',"http://localhost:3001/sql/" + rowObject.ID);
 
-        var i = document.createElement("input"); //input element, text
-        i.setAttribute('type',"text");
-        i.setAttribute('name',"METER_NUM");
-        i.setAttribute('value',rowObject.METER_NUM);
-        f.appendChild(i);
+        var p1 = document.createElement("p");
+        f.appendChild(p1);
+        var i1 = document.createElement("input"); //input element, text
+        i1.setAttribute('type',"text");
+        i1.setAttribute('name',"METER_NUM");
+        i1.setAttribute('value',rowObject.METER_NUM);
+        p1.appendChild(i1);
 
-        var j = document.createElement("input"); //input element, text
-        j.setAttribute('type',"text");
-        j.setAttribute('name',"METER_NUM");
-        j.setAttribute('value',rowObject.METER_NAME);
-        f.appendChild(j);
+        var p2 = document.createElement("p");
+        f.appendChild(p2);
+        var i2 = document.createElement("input"); //input element, text
+        i2.setAttribute('type',"text");
+        i2.setAttribute('name',"METER_NAME");
+        i2.setAttribute('value',rowObject.METER_NAME);
+        p2.appendChild(i2);
 
-        var k = document.createElement("input"); //input element, text
-        k.setAttribute('type',"text");
-        k.setAttribute('name',"METER_NUM");
-        k.setAttribute('value',rowObject.PRODUCTION_DATE);
-        f.appendChild(k);
+        var p3 = document.createElement("p");
+        f.appendChild(p3);
+        var i3 = document.createElement("input"); //input element, text
+        i3.setAttribute('type',"text");
+        i3.setAttribute('name',"PRODUCTION_DATE");
+        i3.setAttribute('value',rowObject.PRODUCTION_DATE);
+        p3.appendChild(i3);
 
-        var l = document.createElement("input"); //input element, text
-        l.setAttribute('type',"text");
-        l.setAttribute('name',"METER_NUM");
-        l.setAttribute('value',rowObject.FLOW_TIME_MINUTES);
-        f.appendChild(l);
+        var p4 = document.createElement("p");
+        f.appendChild(p4);
+        var i4 = document.createElement("input"); //input ei4ement, text
+        i4.setAttribute('type',"text");
+        i4.setAttribute('name',"FLOW_TIME_MINUTES");
+        i4.setAttribute('value',rowObject.FLOW_TIME_MINUTES);
+        p4.appendChild(i4);
 
         var s = document.createElement("input"); //input element, Submit button
         s.setAttribute('type',"submit");
         s.setAttribute('value',"Submit");
 
-
         f.appendChild(s);
+        f.addEventListener("submit", eventObject => {
+          eventObject.preventDefault();
+          var formData = new FormData(f);;
+          var result = {};
+          for (var entry of formData.entries()){
+            result[entry[0]] = entry[1];
+          }
+          result.ID = f.id;
+          result = JSON.stringify(result);
+          console.log(result);
+
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("PUT", "http://localhost:3001/w3sql", true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(result);
+        });
 
         //and some more input elements here
         //and dont forget to add a submit button
@@ -135,8 +238,12 @@
 
         // document.getElementsByTagName('body')[0].appendChild(f);
         document.getElementById('editTable').appendChild(f);
-        // parentElement.parentNode.appendChild(f);
+        // parentElement.parentElement.parentElement.parentElement.appendChild(f);
       }
+
+      // window.onload = function(){
+      //   loadDoc();
+      // });
 
       // $(document).ready(function(){
       //   $("tr").each(function(index, element){
