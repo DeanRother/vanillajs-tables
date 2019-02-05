@@ -45,6 +45,10 @@
         background-color: lightgrey;
         font-style: bold;
       }
+      .editButtonActive {
+        background-color: lightgrey;
+        disabled: true;
+      }
     </style>
      <script src="https://www.w3schools.com/lib/w3.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -115,15 +119,44 @@
       //   w3.displayObject("tbl1",dataObject);
       // }
 
+      // var dataObject = {};
+      //
+      // function getData(){
+      //   w3.getHttpObject("http://localhost:3001/w3sql", function(o){
+      //     var meters = {
+      //           "meters": o
+      //         };
+      //     return meters;
+      //   }
+      // }
+
       function loadDoc(){
         w3.getHttpObject("http://localhost:3001/w3sql", function(o){
           var meters = {
             "meters": o
           };
+          // var dataObject = getData();
           console.log(meters);
           w3.displayObject("tbl1",meters);
         });
       };
+
+
+
+      //
+      // function getData(){
+      //   w3.getHttpObject("http://localhost:3001/w3sql",function(o){
+      //     meters = {
+      //       "meters": o
+      //     };
+      //     // console.log(meters);
+      //   });
+      // }
+      //
+      // function loadDoc(){
+      //   console.log(meters.getAll());
+      //   w3.displayObject("tbl1",meters.getAll());
+      // }
 
       function rowSelected(event){
         console.log(event);
@@ -135,17 +168,20 @@
         console.log(eventObject.target.getAttribute("ID"));
         // console.log(data.meters[0]);
         var id = eventObject.target.getAttribute("ID");
-        var item = findId(dataObject, id);
-        console.log(item);
 
-        // This should work.  But, maybe covered by w3 css?
-        eventObject.target.parentNode.parentNode.className = "editRow";
+        w3.getHttpObject("http://localhost:3001/w3sql/" + encodeURIComponent(id), function(o){
+          var item = findId(o, id);
+          console.log("rowEdit item: " + item);
+          // This should work.  But, maybe covered by w3 css?
+          // eventObject.target.parentNode.parentNode.className = "editRow";
+          // eventObject.target.className = "editButtonActive";
+          CreateForm(eventObject.target, item);
 
-        CreateForm(eventObject.target, item);
+        });
       }
 
       function findId(data, idToLookFor) {
-        var dataArray = data.meters;
+        var dataArray = data;
         for (var i = 0; i < dataArray.length; i++) {
           if (dataArray[i].ID == idToLookFor) {
               return(dataArray[i]);
@@ -180,14 +216,23 @@
 
         var p1 = document.createElement("p");
         f.appendChild(p1);
+        var l1 = document.createElement("input");
+        l1.setAttribute("value","Meter Number:");
+        l1.setAttribute("disabled",true);
+        p1.appendChild(l1);
         var i1 = document.createElement("input"); //input element, text
         i1.setAttribute('type',"text");
         i1.setAttribute('name',"METER_NUM");
+        i1.innerText = "Meter Number"
         i1.setAttribute('value',rowObject.METER_NUM);
         p1.appendChild(i1);
 
         var p2 = document.createElement("p");
         f.appendChild(p2);
+        var l2 = document.createElement("input");
+        l2.setAttribute("value","Meter Name:");
+        l2.setAttribute("disabled",true);
+        p2.appendChild(l2);
         var i2 = document.createElement("input"); //input element, text
         i2.setAttribute('type',"text");
         i2.setAttribute('name',"METER_NAME");
@@ -195,7 +240,10 @@
         p2.appendChild(i2);
 
         var p3 = document.createElement("p");
-        f.appendChild(p3);
+        f.appendChild(p3);var l3 = document.createElement("input");
+        l3.setAttribute("value","Production Date:");
+        l3.setAttribute("disabled",true);
+        p3.appendChild(l3);
         var i3 = document.createElement("input"); //input element, text
         i3.setAttribute('type',"text");
         i3.setAttribute('name',"PRODUCTION_DATE");
@@ -203,7 +251,10 @@
         p3.appendChild(i3);
 
         var p4 = document.createElement("p");
-        f.appendChild(p4);
+        f.appendChild(p4);var l4 = document.createElement("input");
+        l4.setAttribute("value","Flow Time (minutes):");
+        l4.setAttribute("disabled",true);
+        p4.appendChild(l4);
         var i4 = document.createElement("input"); //input ei4ement, text
         i4.setAttribute('type',"text");
         i4.setAttribute('name',"FLOW_TIME_MINUTES");
@@ -227,9 +278,10 @@
           console.log(result);
 
           var xhttp = new XMLHttpRequest();
-          xhttp.open("PUT", "http://localhost:3001/w3sql", true);
+          xhttp.open("PUT", "http://localhost:3001/w3sql", false);
           xhttp.setRequestHeader("Content-type", "application/json");
           xhttp.send(result);
+          loadDoc();
         });
 
         //and some more input elements here
